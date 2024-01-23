@@ -1,0 +1,95 @@
+- name: Roboshop SG and Rules
+  security_groups:
+  - DB:
+    - mongodb_sg
+    - redis_sg
+    - mysql_sg
+    - rabbitmq_sg
+  - APP:
+    - catalogue_sg
+    - user_sg
+    - cart_sg
+    - shipping_sg
+    - payment_sg
+  - WEB:
+    - web_sg
+  - ALB:
+    - web_alb_sg
+    - app_alb_sg
+  - VPN:
+    - vpn_sg
+  ingress_rule:
+  - mongodb_sg:
+    - name: mongodb_vpn
+      purpose: mongodb should accept traffic on 22 from vpn
+    - name: mongodb_catalogue
+      purpose: mongodb should accept traffic on 27017 from catalogue
+    - name: mongodb_user
+      purpose: mongodb should accept traffic on 27017 from user
+  - redis_sg:
+    - name: redis_vpn
+      purpose: redis should accept traffic on 22 from vpn
+    - name: redis_user
+      purpose: redis should accept traffic on 6379 from user
+    - name: redis_cart
+      purpose: redis should accept traffic on 6379 from cart
+  - mysql_sg:
+    - name: mysql_vpn
+      purpose: mysql should accept traffic on 22 from vpn
+    - name: mysql_shipping
+      purpose: mysql should accept traffic on 3306 from shipping
+  - rabbitmq_sg:
+    - name: rabbitmq_vpn
+      purpose: rabbitmq should accept traffic on 22 from vpn
+    - name: rabbitmq_payment
+      purpose: rabbitmq should accept traffic on 5672 from payment
+  - catalogue_sg:
+    - name: catalogue_vpn
+      purpose: catalogue should accept traffic on 22 from vpn
+    - name: catalogue_app_alb
+      purpose: catalogue should accept traffic on 8080 from APP ALB
+  - user_sg:
+    - name: user_vpn
+      purpose: user should accept traffic on 22 from vpn
+    - name: user_app_alb
+      purpose: user should accept traffic on 8080 from APP ALB
+  - cart_sg:
+    - name: cart_vpn
+      purpose: cart should accept traffic on 22 from vpn
+    - name: cart_app_alb
+      purpose: cart should accept traffic on 8080 from APP ALB
+  - shipping_sg:
+    - name: shipping_vpn
+      purpose: shipping should accept traffic on 22 from vpn
+    - name: shipping_app_alb
+      purpose: shipping should accept traffic on 8080 from APP ALB
+  - payment_sg:
+    - name: payment_vpn
+      purpose: payment should accept traffic on 22 from vpn
+    - name: payment_app_alb
+      purpose: payment should accept traffic on 8080 from APP ALB
+  - app_alb_sg:
+    - name: app_alb_vpn
+      purpose: App ALB should accept traffic on 80 from vpn
+    - name: app_alb_web
+      purpose: App ALB should accept traffic on 80 from web
+    - name: app_alb_catalogue
+      purpose: App ALB should accept traffic on 80 from catalogue
+    - name: app_alb_user
+      purpose: App ALB should accept traffic on 80 from user
+    - name: app_alb_cart
+      purpose: App ALB should accept traffic on 80 from cart
+    - name: app_alb_shipping
+      purpose: App ALB should accept traffic on 80 from shipping
+    - name: app_alb_payment
+      purpose: App ALB should accept traffic on 80 from payment
+  - web_sg:
+    - name: web_vpn
+      purpose: web should accept traffic on 22 from vpn
+    - name: web_web_alb
+      purpose: web should accept traffic on 80 from Web ALB
+  - web_alb_sg:
+    - name: web_alb_http
+      purpose: web ALB should accept traffic on 80 from internet
+    - name: web_alb_https
+      purpose: web ALB should accept traffic on 443 from internet

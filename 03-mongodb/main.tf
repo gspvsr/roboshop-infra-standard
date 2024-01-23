@@ -1,22 +1,22 @@
-module "mongodb_sg" {
-  source = "../../terrafrom-aws-securitygroup"
-  project_name = var.project_name
-  sg_name = "mongodb"
-  sg_description = "Allowing traffic"
-  #sg_ingress_rules = var.sg_ingress_rules
-  vpc_id = data.aws_ssm_parameter.vpc_id.value
-  common_tags = var.common_tags
-}
+# module "mongodb_sg" {
+#   source = "../../terrafrom-aws-securitygroup"
+#   project_name = var.project_name
+#   sg_name = "mongodb"
+#   sg_description = "Allowing traffic"
+#   #sg_ingress_rules = var.sg_ingress_rules
+#   vpc_id = data.aws_ssm_parameter.vpc_id.value
+#   common_tags = var.common_tags
+# }
 
-resource "aws_security_group_rule" "mongodb_vpn" {
-  type              = "ingress"
-  from_port        = 22
-  to_port           = 22
-  protocol          = "tcp"
-  source_security_group_id = data.aws_ssm_parameter.vpn_sg_id.value
-  # cidr_blocks       = ["${chomp(data.http.myip.body)}/32"]
-  security_group_id = module.mongodb_sg.security_group_id
-}
+# resource "aws_security_group_rule" "mongodb_vpn" {
+#   type              = "ingress"
+#   from_port        = 22
+#   to_port           = 22
+#   protocol          = "tcp"
+#   source_security_group_id = data.aws_ssm_parameter.vpn_sg_id.value
+#   # cidr_blocks       = ["${chomp(data.http.myip.body)}/32"]
+#   security_group_id = module.mongodb_sg.security_group_id
+# }
 
 
 module "mongodb_instance" {
