@@ -9,7 +9,7 @@ variable "env" {
 variable "common_tags" {
   default = {
     Project = "roboshop"
-    Component = "vpn"
+    Component = "catalogue"
     Environment = "DEV"
     Terraform = "true"
   }

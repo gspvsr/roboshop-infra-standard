@@ -1,5 +1,5 @@
 variable "project_name" {
-    default = "roboshop"
+  default = "roboshop"
 }
 
 variable "env" {
@@ -13,4 +13,8 @@ variable "common_tags" {
     Environment = "DEV"
     Terraform = "true"
   }
+}
+
+variable "zone_name" {
+  default = "gspaws.online"
 }
