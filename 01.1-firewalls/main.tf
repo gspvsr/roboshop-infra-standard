@@ -191,6 +191,17 @@ resource "aws_security_group_rule" "web_vpn" {
   security_group_id = module.web_sg.security_group_id
 }
 
+resource "aws_security_group_rule" "web_vpn_ssh" {
+  type              = "ingress"
+  description = "Allowing port number 80 from VPN"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  source_security_group_id = module.vpn_sg.security_group_id
+  # cidr_blocks       = ["${chomp(data.http.myip.body)}/32"]
+  security_group_id = module.web_sg.security_group_id
+}
+
 
 resource "aws_security_group_rule" "web_web_alb" {
   type              = "ingress"
@@ -212,6 +223,19 @@ resource "aws_security_group_rule" "web_alb_internet" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = module.web_sg.security_group_id
 }
+
+resource "aws_security_group_rule" "web_alb_internet_https" {
+  type              = "ingress"
+  description = "Allowing port number 80 from web alb"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = module.web_alb_sg.security_group_id
+}
+
+
+
 
 
 

@@ -9,7 +9,7 @@ variable "env" {
 variable "common_tags" {
   default = {
     Project = "roboshop"
-    Component = "Web-ALB"
+    Component = "web-alb"
     Environment = "DEV"
     Terraform = "true"
   }
