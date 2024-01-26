@@ -94,6 +94,38 @@ module "web_alb_sg"{
   )
 }
 
+module "redis_sg"{
+  source = "../../terrafrom-aws-securitygroup"
+  project_name = var.project_name
+  sg_name = "redis"
+  sg_description = "Allowing traffic"
+  #sg_ingress_rules = var.sg_ingress_rules
+  vpc_id = data.aws_ssm_parameter.vpc_id.value
+  common_tags = merge(
+    var.common_tags,
+    {
+      Component = "redis",
+      Name = "redis"
+    }
+  )
+}
+
+module "user_sg"{
+  source = "../../terrafrom-aws-securitygroup"
+  project_name = var.project_name
+  sg_name = "user"
+  sg_description = "Allowing traffic"
+  #sg_ingress_rules = var.sg_ingress_rules
+  vpc_id = data.aws_ssm_parameter.vpc_id.value
+  common_tags = merge(
+    var.common_tags,
+    {
+      Component = "user",
+      Name = "user"
+    }
+  )
+}
+
 # this is allowing traffic from VPN on port on 22 for trouble shooting.
 resource "aws_security_group_rule" "vpn" {
   type              = "ingress"
@@ -170,7 +202,7 @@ resource "aws_security_group_rule" "app_alb_vpn" {
 
 resource "aws_security_group_rule" "app_alb_web" {
   type              = "ingress"
-  description = "Allowing port number 80 from VPN"
+  description = "Allowing port number 80 from web"
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
@@ -179,6 +211,17 @@ resource "aws_security_group_rule" "app_alb_web" {
   security_group_id = module.app_alb_sg.security_group_id
 }
 
+resource "aws_security_group_rule" "mongodb_user" {
+  type              = "ingress"
+  description = "Allowing port number 27017 from user"
+  from_port         = 27017
+  to_port           = 27017
+  protocol          = "tcp"
+  source_security_group_id = module.user_sg.security_group_id
+  #cidr_blocks       = ["${chomp(data.http.myip.body)}/32"]
+  #ipv6_cidr_blocks  = [aws_vpc.example.ipv6_cidr_block]
+  security_group_id = module.mongodb_sg.security_group_id
+}
 
 resource "aws_security_group_rule" "web_vpn" {
   type              = "ingress"
@@ -234,6 +277,50 @@ resource "aws_security_group_rule" "web_alb_internet_https" {
   security_group_id = module.web_alb_sg.security_group_id
 }
 
+resource "aws_security_group_rule" "redis_user" {
+  type              = "ingress"
+  description = "Allowing port number 6379 from user"
+  from_port         = 6379
+  to_port           = 6379
+  protocol          = "tcp"
+  source_security_group_id = module.user_sg.security_group_id
+  # cidr_blocks       = ["${chomp(data.http.myip.body)}/32"]
+  security_group_id = module.redis_sg.security_group_id
+}
+
+
+resource "aws_security_group_rule" "redis_vpn" {
+  type              = "ingress"
+  description = "Allowing port number 22 from VPN"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  source_security_group_id = module.vpn_sg.security_group_id
+  # cidr_blocks       = ["${chomp(data.http.myip.body)}/32"]
+  security_group_id = module.redis_sg.security_group_id
+}
+
+resource "aws_security_group_rule" "user_app_alb" {
+  type              = "ingress"
+  description = "Allowing port number 8080 from app ALB"
+  from_port         = 8080
+  to_port           = 8080
+  protocol          = "tcp"
+  source_security_group_id = module.app_alb_sg.security_group_id
+  # cidr_blocks       = ["${chomp(data.http.myip.body)}/32"]
+  security_group_id = module.user_sg.security_group_id
+}
+
+resource "aws_security_group_rule" "user_vpn" {
+  type              = "ingress"
+  description = "Allowing port number 22 from VPN"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  source_security_group_id = module.vpn_sg.security_group_id
+  # cidr_blocks       = ["${chomp(data.http.myip.body)}/32"]
+  security_group_id = module.user_sg.security_group_id
+}
 
 
 

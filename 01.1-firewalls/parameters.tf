@@ -33,3 +33,15 @@ resource "aws_ssm_parameter" "web_alb_sg_id" {
   type  = "String"
   value = module.web_alb_sg.security_group_id # module should have output declaration
 }
+
+resource "aws_ssm_parameter" "redis_sg_id" {
+  name  = "/${var.project_name}/${var.env}/redis_sg_id"
+  type  = "String"
+  value = module.redis_sg.security_group_id # module should have output declaration
+}
+
+resource "aws_ssm_parameter" "user_sg_id" {
+  name  = "/${var.project_name}/${var.env}/user_sg_id"
+  type  = "String"
+  value = module.user_sg.security_group_id # module should have output declaration
+}
