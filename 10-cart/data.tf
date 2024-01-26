@@ -1,29 +1,37 @@
-module "cart" {
-    source = "../../terraform-roboshop-app"
-    project_name = var.project_name
-    env =   var.env
-    common_tags = var.common_tags
+data "aws_ssm_parameter" "vpc_id" {
+  name = "/${var.project_name}/${var.env}/vpc_id"
+}
 
-    # target group
-    # health_check = var.health_check
-    target_group_port = var.target_group_port
-    vpc_id = data.aws_ssm_parameter.vpc_id.value
+data "aws_ssm_parameter" "cart_sg_id" {
+  name = "/${var.project_name}/${var.env}/cart_sg_id"
+}
 
-    # launch templete
-    image_id = data.aws_ami.devops_ami.id
-    security_group_id = data.aws_ssm_parameter.user_sg_id.value
-    user_data = filebase64("${path.module}/cart.sh")
-    launch_template_tags = var.launch_template_tags
+data "aws_ssm_parameter" "private_subnet_ids" {
+  name = "/${var.project_name}/${var.env}/private_subnet_ids"
+}
 
-    # autoscaling
-    vpc_zone_identifier = split(",",data.aws_ssm_parameter.private_subnet_ids.value)
-    tag = var.autoscaling_tags
+data "aws_ssm_parameter" "app_alb_listener_arn" {
+  name = "/${var.project_name}/${var.env}/app_alb_listener_arn"
+}
 
-    # autoscalingpolicy, I am good with optional params
 
-    #listener rule 
-    alb_listener_arn = data.aws_ssm_parameter.app_alb_listener_arn.value
-    rule_priority = 20 # Since we have catalogue 10 already
-    host_header = "cart.app.gspaws.online"
+data "aws_ami" "devops_ami" {
+  most_recent      = true
+  name_regex       = "Centos-8-DevOps-Practice"
+  owners           = ["973714476881"]
 
+  filter {
+    name   = "name"
+    values = ["Centos-8-DevOps-Practice"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
 }
