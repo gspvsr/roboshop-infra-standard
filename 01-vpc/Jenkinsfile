@@ -26,12 +26,13 @@ pipeline {
             }
         }
 
-        state('Approve'){
+        stage('Approve'){
             steps {
                 input "shall i apply?"
             }
         }
-        state('Apply'){
+
+        stage('Apply'){
             steps {
                 input "terraform apply -auto-approve"
             }
