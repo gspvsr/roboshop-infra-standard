@@ -1,6 +1,5 @@
 pipeline {
     agent { node { label 'Agent-1' } }
-    
     options {
         ansiColor('xterm')
     }
@@ -9,20 +8,20 @@ pipeline {
         stage('init') {
             steps {
                 sh '''
-                cd 01-vpc
-                ls -ltr
-                pwd
-                terraform init
+                    cd 01-vpc
+                    ls -ltr
+                    pwd
+                    terraform init
                 '''
             }
         }
         stage('Plan') {
             steps {
                 sh '''
-                cd 01-vpc
-                ls -ltr
-                pwd
-                terraform plan
+                    cd 01-vpc
+                    ls -ltr
+                    pwd
+                    terraform plan
                 '''
             }
         }
