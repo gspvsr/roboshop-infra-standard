@@ -1,7 +1,6 @@
 pipeline {
     agent { node { label 'Agent-1' } }
-    }
-    stages {
+        stages {
         stage('init') {
             steps {
                 sh '''
