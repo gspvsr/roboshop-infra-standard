@@ -1,6 +1,10 @@
 pipeline {
     agent { node { label 'Agent-1' } }
-        stages {
+    options {
+        ansiColor('xterm')
+    }
+    
+    stages {
         stage('init') {
             steps {
                 sh '''
