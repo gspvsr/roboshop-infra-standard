@@ -3,6 +3,10 @@ pipeline {
     options {
         ansiColor('xterm')
     }
+    environment {
+        // Define environment variables if needed
+    }
+    
     stages {
         stage('init') {
             steps {
