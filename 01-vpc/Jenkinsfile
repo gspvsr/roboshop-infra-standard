@@ -1,8 +1,9 @@
 pipeline {
     agent { node { label 'Agent-1' } }
     options {
-        ansiColor('xterm')
-    } 
+        // Other options go here if needed
+    }
+    
     stages {
         stage('init') {
             steps {
@@ -36,5 +37,9 @@ pipeline {
         failure { 
             echo 'I will run when there is a failure'
         }
+    }
+
+    options {
+        ansiColor('xterm')
     }
 }
